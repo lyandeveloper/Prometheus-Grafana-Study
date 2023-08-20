@@ -1,0 +1,48 @@
+version: '3.4'
+
+services:
+  application:
+    build:
+      context: '/home/lyancampos/ESTUDO/prometheus-study'
+      dockerfile: '/home/lyancampos/ESTUDO/prometheus-study/Dockerfile'
+    container_name: application
+    restart: always
+    ports:
+      - 3333:3333
+    networks:
+      - metrics
+
+  prometheus:
+    image: prom/prometheus
+    user: root
+    container_name: prometheus
+    hostname: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/prometheus/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    ports:
+      - 9090:9090
+    networks:
+      - metrics
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    hostname: grafana
+    environment:
+      -  GF_SECURITY_ADMIN_PASSWORD=admin
+    restart: unless-stopped
+    volumes:
+      - ./grafana-data:/var/lib/grafana:rw
+    ports:
+      - 3000:3000
+    networks:
+      - metrics
+
+networks:
+  metrics:
+    driver: bridge
