@@ -4,4 +4,14 @@
 
 <img src="screenshot.png"/>
 
+<h2>How to Run</h2>
+Run in your terminal
 
+```
+docker compose up -d
+```
+
+<h2>Ports</h2>
+Grafana: 3000 <br>
+Prometheus: 9000 <br>
+Application: 3333
